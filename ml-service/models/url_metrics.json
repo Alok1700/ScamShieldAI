@@ -1,0 +1,70 @@
+{
+  "model_name": "ScamShield URL Threat Classifier (Calibrated Random Forest)",
+  "version": "1.0.0",
+  "dataset_name": "URL Features Threat Dataset (11,424 samples)",
+  "trained_at": "2026-11-07T11:07:00.504047+00:00",
+  "dataset_size": 11424,
+  "train_samples": 9139,
+  "test_samples": 2285,
+  "features": [
+    "url_length",
+    "has_ip_address",
+    "dot_count",
+    "https_flag",
+    "url_entropy",
+    "token_count",
+    "subdomain_count",
+    "query_param_count",
+    "tld_length",
+    "path_length",
+    "has_hyphen_in_domain",
+    "number_of_digits",
+    "tld_popularity",
+    "suspicious_file_extension",
+    "domain_name_length",
+    "percentage_numeric_chars"
+  ],
+  "feature_importances": {
+    "path_length": 0.30543,
+    "token_count": 0.21265,
+    "https_flag": 0.1268,
+    "percentage_numeric_chars": 0.11904,
+    "number_of_digits": 0.1061,
+    "dot_count": 0.04274,
+    "domain_name_length": 0.02289,
+    "subdomain_count": 0.02117,
+    "has_ip_address": 0.01616,
+    "url_length": 0.00989,
+    "tld_length": 0.0074,
+    "url_entropy": 0.00463,
+    "suspicious_file_extension": 0.00418,
+    "tld_popularity": 0.00078,
+    "has_hyphen_in_domain": 9e-05,
+    "query_param_count": 6e-05
+  },
+  "metrics": {
+    "accuracy": 0.9991,
+    "precision": 0.9993,
+    "recall": 0.9993,
+    "f1_score": 0.9993,
+    "roc_auc": 1.0,
+    "confusion_matrix": {
+      "true_negative": 846,
+      "false_positive": 1,
+      "false_negative": 1,
+      "true_positive": 1437
+    },
+    "latency_ms_per_sample": 0.1507,
+    "training_time_sec": 1.17
+  },
+  "thresholds": {
+    "high_risk": 0.75,
+    "elevated_risk": 0.5,
+    "caution_risk": 0.3
+  },
+  "limitations": [
+    "Evaluates lexical and structural signals offline; does not perform active HTTP/network execution.",
+    "Newly minted benign domains may trigger low-confidence caution if unusual TLDs are used.",
+    "Must be combined with threat intelligence and LLM explainability for full context."
+  ]
+}

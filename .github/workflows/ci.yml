@@ -1,0 +1,66 @@
+name: ScamShield AI CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  ml-service:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install ML dependencies
+        run: |
+          cd ml-service
+          pip install -r requirements.txt
+      - name: Train and evaluate ML Model
+        run: |
+          python ml-service/training/train.py
+          python ml-service/training/evaluate.py
+      - name: Run ML tests
+        run: |
+          PYTHONPATH=ml-service python ml-service/tests/test_inference.py
+
+  backend-server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: 'server/package-lock.json'
+      - name: Install Server dependencies
+        run: |
+          cd server
+          npm install
+      - name: Run Backend Integration Tests
+        run: |
+          cd server
+          npm test
+
+  frontend-client:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: 'client/package-lock.json'
+      - name: Install Client dependencies
+        run: |
+          cd client
+          npm install
+      - name: Build Frontend Distribution
+        run: |
+          cd client
+          npm run build

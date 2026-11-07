@@ -1,0 +1,70 @@
+{
+  "model_name": "ScamShield QR Code Threat Classifier (Calibrated Random Forest)",
+  "version": "1.0.0",
+  "dataset_name": "ScamShield QR Code Payload Threat Dataset (10,000 samples)",
+  "trained_at": "2026-11-06T17:52:31.256142Z",
+  "dataset_size": 10000,
+  "train_samples": 8000,
+  "test_samples": 2000,
+  "features": [
+    "url_length",
+    "has_ip_address",
+    "dot_count",
+    "https_flag",
+    "url_entropy",
+    "token_count",
+    "subdomain_count",
+    "query_param_count",
+    "tld_length",
+    "path_length",
+    "has_hyphen_in_domain",
+    "number_of_digits",
+    "tld_popularity",
+    "suspicious_file_extension",
+    "domain_name_length",
+    "percentage_numeric_chars"
+  ],
+  "feature_importances": {
+    "path_length": 0.3442,
+    "https_flag": 0.15602,
+    "token_count": 0.13521,
+    "percentage_numeric_chars": 0.10734,
+    "number_of_digits": 0.09812,
+    "suspicious_file_extension": 0.06693,
+    "has_ip_address": 0.02414,
+    "dot_count": 0.0207,
+    "tld_popularity": 0.0155,
+    "url_length": 0.01182,
+    "tld_length": 0.00983,
+    "subdomain_count": 0.0045,
+    "url_entropy": 0.00348,
+    "domain_name_length": 0.00178,
+    "has_hyphen_in_domain": 0.00031,
+    "query_param_count": 0.00012
+  },
+  "metrics": {
+    "accuracy": 0.9965,
+    "precision": 0.995,
+    "recall": 0.998,
+    "f1_score": 0.9965,
+    "roc_auc": 0.9999,
+    "confusion_matrix": {
+      "true_negative": 995,
+      "false_positive": 5,
+      "false_negative": 2,
+      "true_positive": 998
+    },
+    "latency_ms_per_sample": 0.2226,
+    "training_time_sec": 1.61
+  },
+  "thresholds": {
+    "high_risk": 0.75,
+    "elevated_risk": 0.5,
+    "caution_risk": 0.3
+  },
+  "limitations": [
+    "Evaluates structural and lexical features of decoded QR payloads offline with zero network I/O.",
+    "QR codes directing to dynamic shorteners (e.g. bit.ly, tinyurl) are assessed based on initial destination.",
+    "Integrates with ScamShield AI's LLM reasoning and UPI protocol analyzer for complete situational coverage."
+  ]
+}
