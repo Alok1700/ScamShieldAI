@@ -1,0 +1,41 @@
+services:
+  # -------------------------------------------------------------------
+  # Service 1: ScamShield AI Full-Stack Platform (Node.js + React UI)
+  # Serves the Express REST API and pre-built React frontend seamlessly.
+  # -------------------------------------------------------------------
+  - type: web
+    name: scamshield-app
+    env: node
+    plan: free
+    region: oregon
+    buildCommand: npm install && npm run build:client
+    startCommand: node server/src/index.js
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 900000
+      - key: RATE_LIMIT_MAX
+        value: 100
+      - key: ML_SERVICE_URL
+        fromService:
+          type: web
+          name: scamshield-ml
+          property: host
+
+  # -------------------------------------------------------------------
+  # Service 2: ScamShield AI Machine Learning Classifier Microservice
+  # Python FastAPI serving scikit-learn models for SMS, URL, and QR threats.
+  # -------------------------------------------------------------------
+  - type: web
+    name: scamshield-ml
+    env: python
+    plan: free
+    region: oregon
+    rootDir: ml-service
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health

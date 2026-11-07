@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const pinoHttp = require('pino-http');
+const path = require('path');
+const fs = require('fs');
 const config = require('./config');
 const logger = require('./utils/logger');
 const rateLimiter = require('./middleware/rateLimiter');
@@ -14,7 +16,8 @@ const app = express();
 
 // Security Headers
 app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" }
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  contentSecurityPolicy: false
 }));
 
 // CORS Configuration
@@ -58,15 +61,27 @@ app.use('/api/', rateLimiter);
 app.use('/api/v1/scan', scanRoutes);
 app.use('/api/v1', healthRoutes);
 
-// Root informational endpoint
-app.get('/', (req, res) => {
-  res.status(200).json({
-    name: 'ScamShield AI REST API',
-    tagline: 'Detect Scams. Understand Risks. Stay Protected.',
-    version: '1.0.0',
-    docs: '/api/v1/health'
+// Serve static frontend assets in production if client/dist exists
+const clientDistPath = path.join(__dirname, '../../client/dist');
+if (fs.existsSync(clientDistPath)) {
+  app.use(express.static(clientDistPath));
+  app.get('*', (req, res, next) => {
+    if (req.originalUrl.startsWith('/api')) {
+      return next();
+    }
+    res.sendFile(path.join(clientDistPath, 'index.html'));
   });
-});
+} else {
+  // Root informational endpoint
+  app.get('/', (req, res) => {
+    res.status(200).json({
+      name: 'ScamShield AI REST API',
+      tagline: 'Detect Scams. Understand Risks. Stay Protected.',
+      version: '1.0.0',
+      docs: '/api/v1/health'
+    });
+  });
+}
 
 // 404 Route Handler
 app.use((req, res) => {

@@ -8,6 +8,7 @@
     "server"
   ],
   "scripts": {
+    "start": "node server/src/index.js",
     "install:all": "npm install && cd client && npm install && cd ../server && npm install",
     "dev": "concurrently -n \"ML,SERVER,CLIENT\" -c \"magenta,blue,cyan\" \"npm run dev:ml\" \"npm run dev:server\" \"npm run dev:client\"",
     "dev:all": "concurrently -n \"ML,SERVER,CLIENT\" -c \"magenta,blue,cyan\" \"npm run dev:ml\" \"npm run dev:server\" \"npm run dev:client\"",
